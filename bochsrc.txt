@@ -1,0 +1,12 @@
+megs:            32
+display_library: sdl2
+romimage:        file=$BXSHARE/BIOS-bochs-latest
+vgaromimage:     file=$BXSHARE/VGABIOS-lgpl-latest.bin
+ata0-master:     type=cdrom, path=os.iso, status=inserted
+boot:            cdrom
+log:             bochslog.log
+clock:           sync=realtime, time0=local
+cpu:             count=1, ips=1000000
+sound:           driver=dummy
+sb16:            wavemode=none, midi=none
+vga:             extension=vbe, update_freq=5
