@@ -3,11 +3,14 @@ CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfile
 os.iso: iso/boot/kernel.elf
 	grub-mkrescue -o os.iso iso
 
-iso/boot/kernel.elf: loader.o kmain.o
-	ld -T link.ld -melf_i386 -o iso/boot/kernel.elf loader.o kmain.o
+iso/boot/kernel.elf: loader.o kmain.o io.o
+	ld -T link.ld -melf_i386 -o iso/boot/kernel.elf loader.o kmain.o io.o
 
 loader.o: loader.s
 	nasm -f elf32 -o loader.o loader.s
+
+io.o: io.s
+	nasm -f elf32 -o io.o io.s
 
 kmain.o: kmain.c
 	gcc $(CFLAGS) kmain.c -o kmain.o
