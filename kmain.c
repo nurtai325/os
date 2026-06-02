@@ -1,6 +1,7 @@
-#include "io.h"
+#include "asm.h"
 
 // TODO: replace magic numbers with constants
+// TODO: transition to 64 bit
 
 int strlen(char *str) {
     char *s = str;
@@ -40,6 +41,11 @@ void vga_move_cursor(unsigned short pos) {
     outb(0x3D4, 15);
     outb(0x3D5, pos & 0x00FF);
 }
+
+struct gdt {
+    unsigned int address;
+    unsigned short size;
+} __attribute__((packed));
 
 void kmain() {
     char *nurtai = "Hello from Nurtai OS";
