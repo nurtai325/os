@@ -1,19 +1,19 @@
 CFLAGS = -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+C_SOURCES = $(wildcard *.c)
+S_SOURCES = $(wildcard *.s)
+OBJECTS = $(C_SOURCES:.c=.o) $(S_SOURCES:.s=.o)
 
 os.iso: iso/boot/kernel.elf
 	grub-mkrescue -o os.iso iso
 
-iso/boot/kernel.elf: loader.o kmain.o asm.o
-	ld -T link.ld -melf_i386 -o iso/boot/kernel.elf loader.o kmain.o asm.o
+iso/boot/kernel.elf: $(OBJECTS)
+	ld -T link.ld -melf_i386 -o iso/boot/kernel.elf $(OBJECTS)
 
-loader.o: loader.s
-	nasm -f elf32 -o loader.o loader.s
+%.o: %.c
+	gcc $(CFLAGS) $< -o $@
 
-asm.o: asm.s
-	nasm -f elf32 -o asm.o asm.s
-
-kmain.o: kmain.c
-	gcc $(CFLAGS) kmain.c -o kmain.o
+%.o: %.s
+	nasm -f elf32 -o $@ $<
 
 clean:
 	find . -regextype posix-extended -type f -regex ".*\.(o|elf|iso|log)" -delete
